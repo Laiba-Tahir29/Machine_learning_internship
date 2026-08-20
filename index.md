@@ -155,13 +155,15 @@ Using the Random Forest model's predicted probability scores, we removed pages w
 
 ## Priority 1 — Immediate Review (Top 5 Shown)
 
-| Rank | Content ID       | Model Score | Impressions | Clicks | Avg Position |    CTR |
-| ---: | ---------------- | ----------: | ----------: | -----: | -----------: | -----: |
-|    1 | content_0aaa1970 |       0.697 |      37,613 |     22 |         36.3 | 0.058% |
-|    2 | content_bfd481a7 |       0.695 |      10,404 |      9 |         42.4 | 0.087% |
-|    3 | content_0c4bfb89 |       0.694 |      12,902 |      7 |         36.1 | 0.054% |
-|    4 | content_91487e6f |       0.679 |      13,542 |     11 |         37.8 | 0.081% |
-|    5 | content_7a0a59b4 |       0.678 |      37,775 |     22 |         34.0 | 0.058% |
+## Priority 1 — Immediate Review (Top 5 Shown)
+
+| Rank | Content ID                | Model Score | Impressions | Clicks | Avg Position |    CTR |
+| ---: | -------------------------- | ----------: | ----------: | -----: | -----------: | -----: |
+|    1 | content_0aaa197051f58d6f   |       0.697 |      37,613 |     22 |         36.3 | 0.058% |
+|    2 | content_bfd481a760fa3064   |       0.695 |      10,404 |      9 |         42.4 | 0.087% |
+|    3 | content_0c4bfb897ad619da   |       0.694 |      12,902 |      7 |         36.1 | 0.054% |
+|    4 | content_91487e6f59e8e82f   |       0.679 |      13,542 |     11 |         37.8 | 0.081% |
+|    5 | content_7a0a59b4cb181ab9   |       0.678 |      37,775 |     22 |         34.0 | 0.058% |
 
 These pages show a consistent pattern: they receive substantial search impressions but have weak average search positions and very low CTRs. Their average positions are all well outside the top 10 results, indicating that their search visibility is not translating effectively into clicks.
 
