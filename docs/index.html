@@ -1,801 +1,2171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Refresh & Content Opportunity Scoring — Laiba Tahir</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root{
-    --paper:#f4f6f3;
-    --paper-2:#e9eeea;
-    --surface:#ffffff;
-    --ink:#18221e;
-    --ink-soft:#53605a;
-    --rule:#d5ddd8;
 
-    --accent:#176b52;
-    --accent-dark:#0d4f3c;
-    --accent-soft:#dcece5;
+/* =========================================================
+   ROOT
+========================================================= */
 
-    --gold:#a87927;
-    --gold-soft:#f4ead6;
+:root{
+  --bg:#eef2ef;
+  --paper:#ffffff;
+  --paper-soft:#f5f7f5;
+  --paper-green:#edf5f1;
 
-    --red:#a23d32;
-    --red-soft:#f3e0dc;
+  --ink:#18211e;
+  --ink-soft:#56615c;
+  --muted:#7b8580;
 
-    --shadow:0 8px 30px rgba(20,40,32,.06);
-  }
+  --line:#d9e0dc;
+  --line-dark:#b9c5bf;
 
-  *{
-    box-sizing:border-box;
-  }
+  --green:#176b52;
+  --green-dark:#0e4f3d;
+  --green-soft:#dceee7;
 
-  html{
-    scroll-behavior:smooth;
-  }
+  --gold:#a87522;
+  --gold-soft:#f5ead5;
 
-  body{
+  --red:#a64034;
+  --red-soft:#f4e2df;
+
+  --shadow:0 14px 40px rgba(24,33,30,.06);
+}
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(23,107,82,.055),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 90% 15%,
+      rgba(168,117,34,.035),
+      transparent 24%
+    ),
+    var(--bg);
+
+  color:var(--ink);
+
+  font-family:'IBM Plex Sans', sans-serif;
+  font-size:16px;
+  line-height:1.72;
+}
+
+::selection{
+  background:var(--green-soft);
+  color:var(--ink);
+}
+
+/* =========================================================
+   TYPOGRAPHY
+========================================================= */
+
+h1,
+h2,
+h3,
+h4{
+  font-family:'DM Serif Display', serif;
+  font-weight:400;
+  color:var(--ink);
+  margin:0;
+}
+
+h1{
+  letter-spacing:-.025em;
+}
+
+h2{
+  letter-spacing:-.015em;
+}
+
+p{
+  margin:0 0 18px;
+}
+
+a{
+  color:var(--green);
+  text-decoration:none;
+}
+
+a:hover{
+  text-decoration:underline;
+}
+
+b,
+strong{
+  font-weight:600;
+}
+
+code{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:.84em;
+  background:#edf1ef;
+  border:1px solid #dce3df;
+  padding:2px 6px;
+  border-radius:4px;
+}
+
+/* =========================================================
+   MAIN PAPER
+========================================================= */
+
+.paper{
+  width:min(100%, 1040px);
+  margin:38px auto;
+  background:var(--paper);
+  box-shadow:var(--shadow);
+  border:1px solid rgba(24,33,30,.07);
+}
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:0 42px;
+}
+
+section{
+  padding:76px 0;
+}
+
+section + section{
+  border-top:1px solid var(--line);
+}
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.eyebrow{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+
+  color:var(--green);
+
+  margin-bottom:15px;
+}
+
+.eyebrow::before{
+  content:"";
+  width:24px;
+  height:2px;
+  background:var(--green);
+  display:inline-block;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+  padding:78px 0 52px;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(23,107,82,.055),
+      transparent 50%
+    );
+}
+
+.hero h1{
+  font-size:clamp(44px, 7vw, 72px);
+  line-height:1.02;
+  max-width:760px;
+}
+
+.hero-dek{
+  margin-top:25px;
+  max-width:720px;
+
+  font-size:20px;
+  line-height:1.65;
+  color:var(--ink-soft);
+}
+
+.byline{
+  margin-top:32px;
+
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 25px;
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.byline strong{
+  color:var(--ink);
+}
+
+/* =========================================================
+   HERO META
+========================================================= */
+
+.hero-meta{
+  margin-top:34px;
+
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.meta-pill{
+  padding:7px 11px;
+
+  border:1px solid var(--line);
+  background:var(--paper);
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+
+  color:var(--ink-soft);
+}
+
+/* =========================================================
+   HERO STAT GRID
+========================================================= */
+
+.hero-stat-row{
+  margin-top:48px;
+
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+
+  border-top:1px solid var(--line-dark);
+  border-bottom:1px solid var(--line-dark);
+}
+
+.hero-stat{
+  padding:25px 24px;
+}
+
+.hero-stat + .hero-stat{
+  border-left:1px solid var(--line);
+}
+
+.hero-stat .num{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:32px;
+  font-weight:600;
+  line-height:1;
+
+  color:var(--green);
+}
+
+.hero-stat .lbl{
+  margin-top:9px;
+
+  font-size:12px;
+  line-height:1.5;
+  color:var(--ink-soft);
+}
+
+/* =========================================================
+   TOC
+========================================================= */
+
+.toc{
+  margin-top:32px;
+
+  display:flex;
+  flex-wrap:wrap;
+  gap:9px;
+}
+
+.toc a{
+  padding:6px 10px;
+
+  border:1px solid var(--line);
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+
+  color:var(--ink-soft);
+
+  transition:.2s ease;
+}
+
+.toc a:hover{
+  background:var(--green-soft);
+  border-color:#c5ddd4;
+  color:var(--green-dark);
+  text-decoration:none;
+}
+
+/* =========================================================
+   SECTION HEADINGS
+========================================================= */
+
+section h2{
+  font-size:38px;
+  line-height:1.15;
+  margin-bottom:22px;
+}
+
+section h3{
+  font-size:22px;
+  margin:38px 0 13px;
+}
+
+.lede{
+  font-size:19px;
+  line-height:1.7;
+  color:var(--ink-soft);
+}
+
+/* =========================================================
+   ABSTRACT
+========================================================= */
+
+.abstract{
+  background:var(--paper-soft);
+}
+
+.abstract-box{
+  border-left:4px solid var(--green);
+  padding-left:25px;
+}
+
+/* =========================================================
+   BLOCKQUOTE
+========================================================= */
+
+blockquote{
+  margin:32px 0;
+
+  padding:22px 25px;
+
+  background:var(--green-soft);
+
+  border-left:4px solid var(--green);
+
+  font-family:'DM Serif Display', serif;
+  font-size:22px;
+  line-height:1.5;
+
+  color:var(--green-dark);
+}
+
+/* =========================================================
+   LISTS
+========================================================= */
+
+ul,
+ol{
+  padding-left:25px;
+  margin:15px 0 20px;
+}
+
+li{
+  margin-bottom:8px;
+}
+
+/* =========================================================
+   CALLOUTS
+========================================================= */
+
+.callout{
+  display:flex;
+  gap:16px;
+
+  margin:25px 0;
+
+  padding:20px 22px;
+
+  background:var(--paper-soft);
+
+  border:1px solid var(--line);
+
+  font-size:14px;
+  line-height:1.65;
+}
+
+.callout.method{
+  background:var(--green-soft);
+  border-color:#cfe3da;
+}
+
+.callout.limit{
+  background:#faf8f2;
+}
+
+.callout .tag{
+  flex-shrink:0;
+
+  height:max-content;
+
+  padding:4px 8px;
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.05em;
+
+  background:var(--green);
+  color:#fff;
+}
+
+.callout.limit .tag{
+  background:var(--gold);
+}
+
+/* =========================================================
+   FORMULA
+========================================================= */
+
+.formula{
+  margin:25px 0;
+
+  padding:22px 24px;
+
+  background:#18211e;
+  color:#f4f7f5;
+
+  border-left:4px solid var(--green);
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:14px;
+  line-height:2;
+}
+
+/* =========================================================
+   TABLES
+========================================================= */
+
+.tbl-wrap{
+  overflow-x:auto;
+  margin:26px 0;
+  border:1px solid var(--line);
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:13px;
+
+  background:#fff;
+}
+
+th{
+  padding:13px 14px;
+
+  text-align:left;
+
+  font-family:'IBM Plex Sans', sans-serif;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+
+  color:var(--ink-soft);
+
+  background:var(--paper-soft);
+
+  border-bottom:2px solid var(--line-dark);
+}
+
+td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--line);
+}
+
+tr:last-child td{
+  border-bottom:none;
+}
+
+td.num,
+th.num{
+  text-align:right;
+}
+
+tr.highlight td{
+  background:var(--green-soft);
+  font-weight:600;
+}
+
+/* =========================================================
+   RESULT CARDS
+========================================================= */
+
+.result-cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+
+  gap:14px;
+
+  margin:30px 0;
+}
+
+.result-card{
+  padding:22px;
+
+  border:1px solid var(--line);
+
+  background:var(--paper-soft);
+}
+
+.result-card.best{
+  background:var(--green-soft);
+  border-color:#c5ddd4;
+}
+
+.result-card .method{
+  font-size:12px;
+  font-weight:600;
+  color:var(--ink-soft);
+}
+
+.result-card .score{
+  margin-top:9px;
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:31px;
+  font-weight:600;
+
+  color:var(--green);
+}
+
+.result-card .caption{
+  margin-top:4px;
+
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* =========================================================
+   CHART
+========================================================= */
+
+.chart-card{
+  margin:30px 0;
+
+  padding:28px;
+
+  background:var(--paper-soft);
+  border:1px solid var(--line);
+}
+
+.chart-title{
+  margin-bottom:25px;
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+
+  color:var(--ink-soft);
+}
+
+.bar-row{
+  margin-bottom:22px;
+}
+
+.bar-label{
+  display:flex;
+  justify-content:space-between;
+
+  margin-bottom:7px;
+
+  font-size:13px;
+}
+
+.bar-label .method{
+  font-weight:600;
+}
+
+.bar-label .val{
+  font-family:'IBM Plex Mono', monospace;
+  color:var(--ink-soft);
+}
+
+.bar-track{
+  height:16px;
+
+  background:#fff;
+
+  border:1px solid var(--line);
+
+  overflow:hidden;
+}
+
+.bar-fill{
+  height:100%;
+  background:#78837e;
+}
+
+.bar-fill.strong{
+  background:var(--green);
+}
+
+.chart-note{
+  margin-top:22px;
+
+  font-size:12px;
+  color:var(--muted);
+}
+
+/* =========================================================
+   METHODOLOGY FLOW
+========================================================= */
+
+.method-flow{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+
+  margin:35px 0;
+
+  border:1px solid var(--line);
+}
+
+.flow-item{
+  padding:20px;
+
+  background:var(--paper-soft);
+}
+
+.flow-item + .flow-item{
+  border-left:1px solid var(--line);
+}
+
+.flow-number{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  color:var(--green);
+}
+
+.flow-title{
+  margin-top:7px;
+
+  font-weight:600;
+  font-size:14px;
+}
+
+.flow-text{
+  margin-top:5px;
+
+  font-size:12px;
+  color:var(--ink-soft);
+}
+
+/* =========================================================
+   PRIORITY
+========================================================= */
+
+.priority-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+
+  margin:40px 0 15px;
+}
+
+.priority-dot{
+  width:10px;
+  height:10px;
+
+  border-radius:50%;
+
+  flex-shrink:0;
+}
+
+.p1 .priority-dot{
+  background:var(--red);
+}
+
+.p2 .priority-dot{
+  background:var(--gold);
+}
+
+.p3 .priority-dot{
+  background:var(--ink-soft);
+}
+
+.priority-head h3{
+  margin:0;
+  font-size:23px;
+}
+
+/* =========================================================
+   RECOMMENDATION SUMMARY
+========================================================= */
+
+.recommendation-box{
+  margin:30px 0;
+
+  padding:25px;
+
+  background:var(--green-soft);
+
+  border:1px solid #c8dfd5;
+}
+
+.recommendation-box .label{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+
+  color:var(--green);
+}
+
+.recommendation-box p{
+  margin-top:9px;
+}
+
+/* =========================================================
+   KEY VALUE
+========================================================= */
+
+.kv-grid{
+  display:grid;
+  grid-template-columns:145px 1fr;
+
+  gap:0;
+
+  margin:25px 0;
+
+  border-top:1px solid var(--line);
+}
+
+.kv-grid dt{
+  padding:15px 15px 15px 0;
+
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+
+  color:var(--muted);
+
+  border-bottom:1px solid var(--line);
+}
+
+.kv-grid dd{
+  margin:0;
+
+  padding:15px 0;
+
+  font-size:14px;
+
+  border-bottom:1px solid var(--line);
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+  padding:55px 0 70px;
+
+  text-align:center;
+
+  border-top:1px solid var(--line);
+
+  background:var(--paper-soft);
+}
+
+footer .mark{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11px;
+  color:var(--muted);
+}
+
+footer a{
+  color:var(--green);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:760px){
+
+  .paper{
     margin:0;
-    background:
-      radial-gradient(circle at 15% 5%, rgba(23,107,82,.055), transparent 28%),
-      radial-gradient(circle at 90% 18%, rgba(168,121,39,.035), transparent 25%),
-      var(--paper);
-
-    color:var(--ink);
-    font-family:'IBM Plex Sans', sans-serif;
-    font-size:17px;
-    line-height:1.65;
+    border:none;
   }
-
-  ::selection{
-    background:var(--accent-soft);
-    color:var(--ink);
-  }
-
-  /* ---------- Typography ---------- */
-
-  h1,h2,h3,h4{
-    font-family:'Newsreader', serif;
-    font-weight:600;
-    color:var(--ink);
-    letter-spacing:-0.02em;
-    margin:0;
-  }
-
-  .mono{
-    font-family:'IBM Plex Mono', monospace;
-  }
-
-  a{
-    color:var(--accent);
-    transition:color .2s ease;
-  }
-
-  a:hover{
-    color:var(--accent-dark);
-  }
-
-  /* ---------- Layout ---------- */
 
   .wrap{
-    max-width:860px;
-    margin:0 auto;
-    padding:0 32px;
+    padding:0 24px;
   }
 
   section{
-    padding:76px 0;
-    position:relative;
+    padding:55px 0;
   }
-
-  section + section{
-    border-top:1px solid var(--rule);
-  }
-
-  /* ---------- Section Labels ---------- */
-
-  .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
-    font-weight:500;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--accent);
-    margin-bottom:16px;
-
-    display:flex;
-    align-items:center;
-    gap:11px;
-  }
-
-  .eyebrow::before{
-    content:"";
-    width:28px;
-    height:1px;
-    background:var(--accent);
-    display:inline-block;
-  }
-
-  /* ---------- Hero ---------- */
 
   .hero{
-    padding:105px 0 78px;
-    border-top:none;
-
-    background:
-      linear-gradient(
-        180deg,
-        rgba(255,255,255,.72) 0%,
-        rgba(244,246,243,.2) 100%
-      );
-
-    border-bottom:1px solid var(--rule);
+    padding:60px 0 45px;
   }
 
   .hero h1{
-    font-size:clamp(42px,6vw,64px);
-    line-height:1.02;
-    max-width:13ch;
-    letter-spacing:-.035em;
+    font-size:44px;
   }
-
-  .hero .dek{
-    margin-top:24px;
-    font-size:19px;
-    line-height:1.6;
-    color:var(--ink-soft);
-    max-width:59ch;
-  }
-
-  /* ---------- Byline ---------- */
-
-  .byline{
-    margin-top:34px;
-
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12px;
-    color:var(--ink-soft);
-
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    gap:8px 24px;
-  }
-
-  .byline span{
-    display:flex;
-    align-items:center;
-  }
-
-  .byline span + span::before{
-    content:"·";
-    margin-right:24px;
-    color:var(--rule);
-  }
-
-  .byline b{
-    color:var(--ink);
-    font-weight:600;
-  }
-
-  /* ---------- Hero Statistics ---------- */
 
   .hero-stat-row{
-    margin-top:52px;
-
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-
-    background:rgba(255,255,255,.72);
-
-    border:1px solid var(--rule);
-    border-radius:10px;
-
-    box-shadow:var(--shadow);
-    overflow:hidden;
-  }
-
-  .hero-stat{
-    padding:25px 24px;
+    grid-template-columns:1fr;
   }
 
   .hero-stat + .hero-stat{
-    border-left:1px solid var(--rule);
+    border-left:none;
+    border-top:1px solid var(--line);
   }
 
-  .hero-stat .num{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:31px;
-    font-weight:600;
-    color:var(--accent);
-    line-height:1;
-    letter-spacing:-.04em;
+  .result-cards{
+    grid-template-columns:1fr;
   }
 
-  .hero-stat .lbl{
-    margin-top:10px;
-    font-size:12.5px;
-    line-height:1.45;
-    color:var(--ink-soft);
+  .method-flow{
+    grid-template-columns:1fr;
   }
 
-  /* ---------- Table of Contents ---------- */
-
-  .toc{
-    display:flex;
-    flex-wrap:wrap;
-    gap:9px;
-
-    margin-top:40px;
-  }
-
-  .toc a{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
-
-    color:var(--ink-soft);
-    text-decoration:none;
-
-    padding:6px 10px;
-
-    border:1px solid var(--rule);
-    border-radius:4px;
-
-    background:rgba(255,255,255,.45);
-
-    transition:
-      background .2s ease,
-      color .2s ease,
-      border-color .2s ease;
-  }
-
-  .toc a:hover{
-    background:var(--accent-soft);
-    color:var(--accent-dark);
-    border-color:#bdd9ce;
-  }
-
-  /* ---------- Prose ---------- */
-
-  p{
-    margin:0 0 17px;
+  .flow-item + .flow-item{
+    border-left:none;
+    border-top:1px solid var(--line);
   }
 
   section h2{
     font-size:32px;
-    line-height:1.15;
-    margin-bottom:23px;
   }
-
-  section h3{
-    font-size:20px;
-    line-height:1.25;
-    margin:38px 0 13px;
-    color:var(--ink);
-  }
-
-  .lede{
-    font-size:19px;
-    line-height:1.6;
-    color:var(--ink-soft);
-    margin-bottom:27px;
-  }
-
-  ul,ol{
-    padding-left:24px;
-    margin:0 0 18px;
-  }
-
-  li{
-    margin-bottom:8px;
-  }
-
-  /* ---------- Blockquote ---------- */
-
-  blockquote{
-    margin:30px 0;
-    padding:18px 24px;
-
-    border-left:3px solid var(--accent);
-
-    background:rgba(220,236,229,.45);
-
-    font-family:'Newsreader', serif;
-    font-style:italic;
-    font-size:21px;
-    line-height:1.5;
-
-    color:var(--ink);
-
-    border-radius:0 6px 6px 0;
-  }
-
-  /* ---------- Inline Code ---------- */
-
-  code{
-    font-family:'IBM Plex Mono', monospace;
-    background:var(--paper-2);
-
-    color:var(--accent-dark);
-
-    padding:2px 7px;
-    border-radius:4px;
-
-    font-size:.84em;
-
-    border:1px solid rgba(23,107,82,.08);
-  }
-
-  /* ---------- Formula ---------- */
-
-  .formula{
-    font-family:'IBM Plex Mono', monospace;
-
-    background:
-      linear-gradient(
-        90deg,
-        rgba(244,234,214,.75),
-        rgba(255,255,255,.55)
-      );
-
-    border:1px solid #eadfc8;
-    border-left:4px solid var(--gold);
-
-    padding:17px 20px;
-    margin:21px 0;
-
-    font-size:14px;
-    line-height:1.9;
-
-    color:var(--ink);
-
-    border-radius:0 6px 6px 0;
-    box-shadow:0 4px 18px rgba(100,80,30,.035);
-  }
-
-  /* ---------- Tables ---------- */
-
-  .tbl-wrap{
-    overflow-x:auto;
-    margin:24px 0;
-
-    background:var(--surface);
-
-    border:1px solid var(--rule);
-    border-radius:7px;
-
-    box-shadow:0 4px 18px rgba(20,40,32,.035);
-  }
-
-  table{
-    width:100%;
-    border-collapse:collapse;
-
-    font-size:13.5px;
-    font-family:'IBM Plex Mono', monospace;
-  }
-
-  th{
-    text-align:left;
-
-    font-family:'IBM Plex Sans', sans-serif;
-    font-weight:600;
-
-    font-size:11px;
-    letter-spacing:.06em;
-    text-transform:uppercase;
-
-    color:var(--ink-soft);
-
-    padding:13px 15px;
-
-    background:#f1f4f1;
-
-    border-bottom:2px solid var(--ink);
-  }
-
-  td{
-    padding:12px 15px;
-    border-bottom:1px solid var(--rule);
-
-    white-space:nowrap;
-  }
-
-  tbody tr:last-child td{
-    border-bottom:none;
-  }
-
-  tbody tr:hover td{
-    background:#f7faf8;
-  }
-
-  td.num,
-  th.num{
-    text-align:right;
-  }
-
-  .tbl-wrap tr.highlight td{
-    background:var(--accent-soft);
-    font-weight:600;
-  }
-
-  .tbl-wrap tr.highlight td:first-child{
-    color:var(--accent-dark);
-  }
-
-  /* ---------- Chart ---------- */
-
-  .chart-card{
-    margin:30px 0;
-
-    padding:30px 28px 24px;
-
-    background:
-      linear-gradient(
-        135deg,
-        #eef3f0,
-        #f7f8f6
-      );
-
-    border:1px solid var(--rule);
-    border-radius:9px;
-
-    box-shadow:var(--shadow);
-  }
-
-  .chart-title{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11.5px;
-    font-weight:500;
-
-    letter-spacing:.08em;
-    text-transform:uppercase;
-
-    color:var(--ink-soft);
-
-    margin-bottom:25px;
-  }
-
-  .bar-row{
-    margin-bottom:20px;
-  }
-
-  .bar-row:last-child{
-    margin-bottom:0;
-  }
-
-  .bar-label{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-
-    font-size:13px;
-    margin-bottom:7px;
-  }
-
-  .bar-label .method{
-    font-weight:500;
-    color:var(--ink);
-  }
-
-  .bar-label .val{
-    font-family:'IBM Plex Mono', monospace;
-    color:var(--ink-soft);
-  }
-
-  .bar-track{
-    height:13px;
-
-    background:#fff;
-
-    border:1px solid var(--rule);
-
-    position:relative;
-
-    border-radius:2px;
-    overflow:hidden;
-  }
-
-  .bar-fill{
-    height:100%;
-    background:#718078;
-
-    transition:width .5s ease;
-  }
-
-  .bar-fill.strong{
-    background:var(--accent);
-  }
-
-  .chart-legend{
-    display:flex;
-    flex-wrap:wrap;
-    gap:18px;
-
-    margin-top:23px;
-
-    font-size:11.5px;
-    color:var(--ink-soft);
-  }
-
-  .chart-legend span{
-    display:flex;
-    align-items:center;
-    gap:7px;
-  }
-
-  .swatch{
-    width:9px;
-    height:9px;
-    display:inline-block;
-    border-radius:2px;
-  }
-
-  /* ---------- Callouts ---------- */
-
-  .callout{
-    display:flex;
-    align-items:flex-start;
-    gap:15px;
-
-    padding:19px 21px;
-    margin:21px 0;
-
-    border:1px solid var(--rule);
-    border-radius:7px;
-
-    background:rgba(255,255,255,.8);
-
-    font-size:14.5px;
-    line-height:1.6;
-
-    box-shadow:0 3px 15px rgba(20,40,32,.025);
-  }
-
-  .callout .tag{
-    font-family:'IBM Plex Mono', monospace;
-
-    font-size:10px;
-    font-weight:500;
-
-    letter-spacing:.06em;
-
-    padding:4px 8px;
-
-    height:fit-content;
-    white-space:nowrap;
-
-    border-radius:3px;
-  }
-
-  .callout.limit{
-    border-left:3px solid var(--gold);
-  }
-
-  .callout.limit .tag{
-    background:var(--gold-soft);
-    color:var(--gold);
-  }
-
-  .callout.method{
-    border-left:3px solid var(--accent);
-  }
-
-  .callout.method .tag{
-    background:var(--accent-soft);
-    color:var(--accent);
-  }
-
-  /* ---------- Priority Cards ---------- */
-
-  .priority-head{
-    display:flex;
-    align-items:center;
-    gap:12px;
-
-    margin:38px 0 15px;
-
-    padding-bottom:10px;
-
-    border-bottom:1px solid var(--rule);
-  }
-
-  .priority-dot{
-    width:9px;
-    height:9px;
-    border-radius:50%;
-    flex-shrink:0;
-  }
-
-  .p1 .priority-dot{
-    background:var(--red);
-    box-shadow:0 0 0 4px var(--red-soft);
-  }
-
-  .p2 .priority-dot{
-    background:var(--gold);
-    box-shadow:0 0 0 4px var(--gold-soft);
-  }
-
-  .p3 .priority-dot{
-    background:var(--ink-soft);
-    box-shadow:0 0 0 4px #e5e8e6;
-  }
-
-  .priority-head h3{
-    margin:0;
-    font-size:21px;
-  }
-
-  /* ---------- Key / Value Grid ---------- */
 
   .kv-grid{
-    display:grid;
-    grid-template-columns:120px 1fr;
-
-    gap:0;
-
-    font-size:14px;
-
-    margin:20px 0 24px;
-
-    background:var(--surface);
-
-    border:1px solid var(--rule);
-    border-radius:7px;
-
-    overflow:hidden;
+    grid-template-columns:1fr;
   }
 
   .kv-grid dt{
-    font-family:'IBM Plex Mono', monospace;
-
-    font-size:10.5px;
-    font-weight:500;
-
-    text-transform:uppercase;
-    letter-spacing:.06em;
-
-    color:var(--ink-soft);
-
-    padding:14px 15px;
-
-    background:#f1f4f1;
-
-    border-bottom:1px solid var(--rule);
-  }
-
-  .kv-grid dd{
-    margin:0;
-
-    padding:14px 17px;
-
-    border-bottom:1px solid var(--rule);
-  }
-
-  .kv-grid dt:last-of-type,
-  .kv-grid dd:last-of-type{
+    padding-bottom:5px;
     border-bottom:none;
   }
 
-  /* ---------- Footer ---------- */
-
-  footer{
-    padding:58px 0 75px;
-
-    text-align:center;
-
-    background:
-      linear-gradient(
-        180deg,
-        transparent,
-        rgba(233,238,234,.65)
-      );
-
-    border-top:1px solid var(--rule);
+  .kv-grid dd{
+    padding-top:0;
   }
 
-  footer .mark{
-    font-family:'IBM Plex Mono', monospace;
-
-    font-size:11.5px;
-    line-height:1.6;
-
-    color:var(--ink-soft);
+  .callout{
+    flex-direction:column;
   }
+}
 
-  footer a{
-    color:var(--accent);
-
-    text-decoration:none;
-
-    border-bottom:1px solid var(--accent-soft);
-  }
-
-  /* ---------- Responsive ---------- */
-
-  @media (max-width:700px){
-
-    .wrap{
-      padding:0 22px;
-    }
-
-    .hero{
-      padding:70px 0 55px;
-    }
-
-    .hero h1{
-      font-size:42px;
-    }
-
-    .hero-stat-row{
-      grid-template-columns:1fr;
-    }
-
-    .hero-stat + .hero-stat{
-      border-left:none;
-      border-top:1px solid var(--rule);
-    }
-
-    .byline{
-      flex-direction:column;
-      align-items:flex-start;
-      gap:8px;
-    }
-
-    .byline span + span::before{
-      display:none;
-    }
-
-    section{
-      padding:55px 0;
-    }
-
-    section h2{
-      font-size:28px;
-    }
-
-    .kv-grid{
-      grid-template-columns:1fr;
-    }
-
-    .kv-grid dt{
-      border-bottom:none;
-      padding-bottom:5px;
-    }
-
-    .kv-grid dd{
-      padding-top:5px;
-    }
-
-    .callout{
-      flex-direction:column;
-      gap:9px;
-    }
-
-    .chart-card{
-      padding:24px 18px 20px;
-    }
-  }
-
-  @media (max-width:480px){
-
-    body{
-      font-size:16px;
-    }
-
-    .wrap{
-      padding:0 18px;
-    }
-
-    .hero h1{
-      font-size:38px;
-    }
-
-    .hero .dek{
-      font-size:17px;
-    }
-
-    .toc{
-      gap:7px;
-    }
-
-    .toc a{
-      font-size:10.5px;
-    }
-  }
 </style>
+</head>
+
+<body>
+
+<div class="paper">
+
+<!-- ======================================================
+     HERO
+====================================================== -->
+
+<header class="hero">
+
+<div class="wrap">
+
+<div class="eyebrow">
+Applied Search Intelligence · FlyRank ML Internship
+</div>
+
+<h1>
+Refresh &amp; Content Opportunity Scoring
+</h1>
+
+<p class="hero-dek">
+Identifying which pages a search team should review first — and testing whether a learned model beats a transparent, hand-written rule at the same job.
+</p>
+
+<div class="byline">
+
+<span><strong>Laiba Tahir</strong></span>
+
+<span>
+Lane: Refresh / Content Opportunity Scoring
+</span>
+
+<span>
+<a href="https://github.com/Laiba-Tahir29/Machine_learning_internship">
+Repository ↗
+</a>
+</span>
+
+</div>
+
+<div class="hero-meta">
+
+<span class="meta-pill">Research Report</span>
+<span class="meta-pill">SEO · Machine Learning</span>
+<span class="meta-pill">Content Prioritization</span>
+<span class="meta-pill">Random Forest</span>
+
+</div>
+
+<div class="hero-stat-row">
+
+<div class="hero-stat">
+
+<div class="num">0.85</div>
+
+<div class="lbl">
+Precision@20 — Random Forest
+</div>
+
+</div>
+
+<div class="hero-stat">
+
+<div class="num">4.25×</div>
+
+<div class="lbl">
+Improvement over the rule-based baseline
+</div>
+
+</div>
+
+<div class="hero-stat">
+
+<div class="num">31,765</div>
+
+<div class="lbl">
+Pages scored, held-out test set
+</div>
+
+</div>
+
+</div>
+
+<nav class="toc">
+
+<a href="#abstract">Abstract</a>
+<a href="#intro">Introduction</a>
+<a href="#data">Data</a>
+<a href="#method">Methodology</a>
+<a href="#results">Results</a>
+<a href="#limits">Limitations</a>
+<a href="#recs">Recommendations</a>
+<a href="#repro">Reproducibility</a>
+
+</nav>
+
+</div>
+
+</header>
+
+
+<!-- ======================================================
+     ABSTRACT
+====================================================== -->
+
+<section id="abstract" class="abstract">
+
+<div class="wrap">
+
+<div class="eyebrow">
+Abstract
+</div>
+
+<div class="abstract-box">
+
+<p class="lede">
+This study addresses the challenge of identifying which pages should be prioritized for content review or refresh. We developed a rule-based scoring approach using content-performance signals such as search impressions, clicks, CTR, and search position to identify pages with potential performance opportunities.
+</p>
+
+<p>
+Initial analysis showed that page activity and search performance were associated with CTR and click volume. We then compared the rule-based approach with Decision Tree and Random Forest models to evaluate whether machine learning could improve page prioritization.
+</p>
+
+<p>
+The Random Forest model achieved a <strong>Precision@20 of 0.85 (85%)</strong>, compared with <strong>0.20 (20%) for the baseline rule-based score</strong>. This means that 17 of the top 20 pages ranked by the Random Forest corresponded to the target priority class, compared with only 4 of the top 20 pages identified by the baseline.
+</p>
+
+<p>
+These findings suggest that combining multiple content-performance signals through a learned model can improve the identification of pages that may benefit from content review or refresh. The results can support SEO teams in prioritizing a limited number of pages for further investigation.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     INTRODUCTION
+====================================================== -->
+
+<section id="intro">
+
+<div class="wrap">
+
+<div class="eyebrow">
+01 · Introduction / Problem Statement
+</div>
+
+<h2>
+The decision this work supports
+</h2>
+
+<p>
+Websites accumulate hundreds or thousands of content pages over time, but not every page performs equally. Some pages maintain strong search visibility, while others show weak performance or signs that they may need attention. This work addresses one specific decision: <strong>which page should an SEO manager review first</strong>, given limited time and resources.
+</p>
+
+<p>
+The output is intended to help prioritize pages for content refresh, title or metadata review, or closer monitoring. Reviewing a page that does not need attention wastes limited resources, while missing a genuinely underperforming page may result in lost search opportunities.
+</p>
+
+<p>
+Several performance signals can indicate that a page may require review. For example, a page may receive a high number of impressions but have a poor ranking position and low CTR, meaning that search visibility is not translating effectively into clicks. Other pages may show limited activity or declining performance. However, relying on a single signal such as CTR, ranking position, or traffic decline does not provide a consistent way to determine which pages should be reviewed first.
+</p>
+
+<p>
+To address this problem, this project combines multiple content-performance signals into a rule-based priority score. The score allows pages to be ranked systematically according to their potential opportunity rather than evaluated using a single signal at a time. The study then compares this rule-based approach with machine learning models to determine whether the prioritization can be improved.
+</p>
+
+<blockquote>
+The objective of this study is to develop and evaluate a scoring approach that combines multiple content-performance signals to prioritize pages for content review or refresh.
+</blockquote>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     DATA
+====================================================== -->
+
+<section id="data">
+
+<div class="wrap">
+
+<div class="eyebrow">
+02 · Data
+</div>
+
+<h2>
+Source, scope, and feature availability
+</h2>
+
+<p>
+We initially used a small static CSV provided in the starter repository for exploratory analysis and development. We then moved to FlyRank's larger production data warehouse, hosted on Hugging Face and queried using DuckDB. The primary table used in this study was <code>fact_content_daily_performance</code>, which contains daily page-level performance data across multiple clients.
+</p>
+
+<p>
+The initial data contract identified a broader set of potential features, including GA4 engagement signals such as <code>ga4_pageviews</code>, <code>ga4_sessions</code>, <code>ga4_engaged_sessions</code>, and <code>scroll_events</code>, as well as traffic-source information. However, availability checks showed that valid GA4 data was present for only <strong>4.2% of rows</strong>, compared with <strong>36.7% for GSC data</strong>. Because of this limited GA4 coverage, the final feature set used for modeling was built entirely from Google Search Console (GSC) signals.
+</p>
+
+<h3>
+Final Modeling Features
+</h3>
+
+<ul>
+
+<li><code>active_days</code></li>
+
+<li><code>total_impressions</code></li>
+
+<li><code>total_clicks</code></li>
+
+<li><code>avg_position</code></li>
+
+<li><code>ctr</code></li>
+
+</ul>
+
+<div class="callout method">
+
+<span class="tag">
+SPLIT DESIGN
+</span>
+
+<span>
+Because the dataset contains pages from multiple clients, a <strong>client-grouped split</strong> was used. All pages belonging to a given client were kept entirely within either the training/development data or the test data. This reduces the risk of client-specific data leakage and helps ensure that the models learn generalizable content-performance patterns rather than simply memorizing client-specific behavior.
+</span>
+
+</div>
+
+<p>
+Real-world performance data contained missing values. Data-cleaning and preprocessing steps were therefore applied before analysis and modeling. Records that did not contain the information required for the relevant analysis were excluded so that the scoring and models were evaluated on usable records.
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     METHODOLOGY
+====================================================== -->
+
+<section id="method">
+
+<div class="wrap">
+
+<div class="eyebrow">
+03 · Methodology
+</div>
+
+<h2>
+From validated signals to a ranked score
+</h2>
+
+<p class="lede">
+The methodology was developed in two stages. First, potential content-performance signals were analyzed using the available development data. Second, the validated signals were used to develop a rule-based prioritization score and compare it with machine learning models.
+</p>
+
+<div class="method-flow">
+
+<div class="flow-item">
+
+<div class="flow-number">01</div>
+
+<div class="flow-title">
+Signal Analysis
+</div>
+
+<div class="flow-text">
+Test activity, position and CTR relationships.
+</div>
+
+</div>
+
+<div class="flow-item">
+
+<div class="flow-number">02</div>
+
+<div class="flow-title">
+Baseline Score
+</div>
+
+<div class="flow-text">
+Calculate opportunity from expected versus actual clicks.
+</div>
+
+</div>
+
+<div class="flow-item">
+
+<div class="flow-number">03</div>
+
+<div class="flow-title">
+ML Models
+</div>
+
+<div class="flow-text">
+Train Decision Tree and Random Forest models.
+</div>
+
+</div>
+
+<div class="flow-item">
+
+<div class="flow-number">04</div>
+
+<div class="flow-title">
+Evaluation
+</div>
+
+<div class="flow-text">
+Compare Precision@20 and Precision@50.
+</div>
+
+</div>
+
+</div>
+
+
+<h3>
+5.1 · Signal 1: Activity
+</h3>
+
+<p>
+We first tested whether page activity was associated with search performance. For each page, we counted the number of distinct days on which GSC data was available during the analysis period and grouped pages into three activity buckets:
+</p>
+
+<ul>
+
+<li><strong>Low activity:</strong> 10 days or fewer</li>
+
+<li><strong>Medium activity:</strong> 11–20 days</li>
+
+<li><strong>High activity:</strong> more than 20 days</li>
+
+</ul>
+
+<div class="tbl-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Activity bucket</th>
+
+<th class="num">Avg. impressions</th>
+
+<th class="num">Avg. clicks</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>High activity</td>
+<td class="num">2,637.4</td>
+<td class="num">7.6</td>
+</tr>
+
+<tr>
+<td>Medium activity</td>
+<td class="num">283.7</td>
+<td class="num">1.2</td>
+</tr>
+
+<tr>
+<td>Low activity</td>
+<td class="num">26.9</td>
+<td class="num">0.1</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<p>
+The results showed a clear relationship between activity and search performance. These results supported the use of activity as a screening signal for identifying pages that may require further review. However, low activity should not be interpreted as direct proof that content is stale, since limited activity may also result from insufficient search exposure or limited data availability.
+</p>
+
+
+<h3>
+5.2 · Signal 2: Position and CTR
+</h3>
+
+<p>
+We then tested the relationship between search position and CTR. Pages were grouped into three position buckets:
+</p>
+
+<ul>
+
+<li><strong>Top 10</strong></li>
+
+<li><strong>Positions 11–20</strong></li>
+
+<li><strong>Position 20+</strong></li>
+
+</ul>
+
+<p>
+Only records with GSC data available and at least 10 impressions were included in this analysis.
+</p>
+
+<div class="tbl-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Position bucket</th>
+
+<th class="num">Average CTR</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+<td>Top 10</td>
+<td class="num">0.34%</td>
+</tr>
+
+<tr>
+<td>Positions 11–20</td>
+<td class="num">0.26%</td>
+</tr>
+
+<tr>
+<td>Position 20+</td>
+<td class="num">0.13%</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<p>
+The results showed that higher-ranking pages generally had higher CTR. This relationship provided evidence that search position is associated with CTR and supported the use of both position and click opportunity when prioritizing pages for review.
+</p>
+
+
+<h3>
+5.3 · Rule-Based Priority Scoring
+</h3>
+
+<p>
+After validating the performance signals, we developed a rule-based scoring approach to prioritize pages for review.
+</p>
+
+<p>
+The scoring focused on the opportunity created when a page receives search impressions but generates fewer clicks than expected.
+</p>
+
+<div class="formula">
+
+Expected Clicks = Total Impressions × Expected CTR<br>
+
+Opportunity Gap = Expected Clicks − Total Clicks<br>
+
+Priority Score = Opportunity Gap × 100
+
+</div>
+
+<p>
+A higher positive score represents a larger estimated gap between expected and actual clicks and therefore a greater potential opportunity for review.
+</p>
+
+<p>
+Pages were ranked from highest to lowest priority score. This rule-based score served as the baseline against which the machine learning models were evaluated.
+</p>
+
+
+<h3>
+5.4 · Machine Learning Comparison
+</h3>
+
+<p>
+The rule-based scoring system was used as the baseline approach. We then trained two machine learning models:
+</p>
+
+<ol>
+
+<li><strong>Decision Tree</strong></li>
+
+<li><strong>Random Forest</strong></li>
+
+</ol>
+
+<p>
+The models used the available page-level performance features to learn patterns associated with the target priority class.
+</p>
+
+<p>
+A client-grouped split was used so that pages belonging to the same client remained entirely within either the training/development data or the test data. This reduced the risk of client-specific data leakage.
+</p>
+
+<p>
+The purpose of the machine learning comparison was to determine whether learned combinations of multiple signals could identify high-priority pages more effectively than the fixed rule-based score.
+</p>
+
+
+<h3>
+5.5 · Evaluation
+</h3>
+
+<p>
+The baseline and machine learning approaches were compared using <strong>Precision@20</strong> and <strong>Precision@50</strong>.
+</p>
+
+<p>
+Precision@K measures the proportion of the top K ranked pages that belong to the target priority class. This metric was selected because the practical goal is to help an SEO team identify a relatively small number of pages to review first.
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     RESULTS
+====================================================== -->
+
+<section id="results">
+
+<div class="wrap">
+
+<div class="eyebrow">
+04 · Results vs Baseline
+</div>
+
+<h2>
+Model performance comparison
+</h2>
+
+<div class="result-cards">
+
+<div class="result-card">
+
+<div class="method">
+BASELINE · RULE-BASED
+</div>
+
+<div class="score">
+0.20
+</div>
+
+<div class="caption">
+Precision@20
+</div>
+
+</div>
+
+<div class="result-card">
+
+<div class="method">
+DECISION TREE
+</div>
+
+<div class="score">
+0.55
+</div>
+
+<div class="caption">
+Precision@20
+</div>
+
+</div>
+
+<div class="result-card best">
+
+<div class="method">
+RANDOM FOREST · BEST
+</div>
+
+<div class="score">
+0.85
+</div>
+
+<div class="caption">
+Precision@20
+</div>
+
+</div>
+
+</div>
+
+
+<div class="tbl-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Method</th>
+
+<th class="num">Precision@20</th>
+
+<th class="num">Precision@50</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Baseline (Rule-Based Score)</td>
+
+<td class="num">0.20</td>
+
+<td class="num">0.14</td>
+
+</tr>
+
+<tr>
+
+<td>Decision Tree</td>
+
+<td class="num">0.55</td>
+
+<td class="num">0.62</td>
+
+</tr>
+
+<tr class="highlight">
+
+<td>Random Forest</td>
+
+<td class="num">0.85</td>
+
+<td class="num">0.68</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<div class="chart-card">
+
+<div class="chart-title">
+Precision@20 by Method
+</div>
+
+<div class="bar-row">
+
+<div class="bar-label">
+
+<span class="method">
+Baseline (Rule)
+</span>
+
+<span class="val">
+0.20
+</span>
+
+</div>
+
+<div class="bar-track">
+
+<div class="bar-fill" style="width:20%"></div>
+
+</div>
+
+</div>
+
+
+<div class="bar-row">
+
+<div class="bar-label">
+
+<span class="method">
+Decision Tree
+</span>
+
+<span class="val">
+0.55
+</span>
+
+</div>
+
+<div class="bar-track">
+
+<div class="bar-fill" style="width:55%"></div>
+
+</div>
+
+</div>
+
+
+<div class="bar-row">
+
+<div class="bar-label">
+
+<span class="method">
+Random Forest
+</span>
+
+<span class="val">
+0.85
+</span>
+
+</div>
+
+<div class="bar-track">
+
+<div class="bar-fill strong" style="width:85%"></div>
+
+</div>
+
+</div>
+
+<div class="chart-note">
+Higher Precision@20 means a greater proportion of the highest-ranked pages belong to the target priority class.
+</div>
+
+</div>
+
+
+<p>
+The Random Forest model clearly outperformed the rule-based baseline across both evaluation metrics.
+</p>
+
+<p>
+At <strong>Precision@20</strong>, Random Forest achieved <strong>0.85</strong>, meaning that <strong>17 of the top 20 ranked pages</strong> corresponded to the target priority class. The baseline achieved 0.20, corresponding to <strong>4 of the top 20 pages</strong>. Therefore, Random Forest achieved <strong>4.25 times the baseline Precision@20</strong>.
+</p>
+
+<p>
+At <strong>Precision@50</strong>, Random Forest achieved <strong>0.68</strong>, compared with <strong>0.14 for the baseline</strong>. Although precision decreased when the ranking list was expanded from 20 to 50 pages, Random Forest continued to substantially outperform the baseline.
+</p>
+
+<p>
+The Decision Tree also performed considerably better than the rule-based baseline. At Precision@20, it achieved 0.55 compared with 0.20 for the baseline. This suggests that even a relatively simple learned model can capture combinations of content-performance signals that a fixed scoring rule may miss.
+</p>
+
+<p>
+Overall, the results indicate that the machine learning approaches, particularly Random Forest, were more effective at prioritizing pages belonging to the target class within a limited review capacity.
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     LIMITATIONS
+====================================================== -->
+
+<section id="limits">
+
+<div class="wrap">
+
+<div class="eyebrow">
+05 · Limitations
+</div>
+
+<h2>
+What this study can — and can't — claim
+</h2>
+
+
+<div class="callout limit">
+
+<span class="tag">
+SCOPE
+</span>
+
+<span>
+The analysis was conducted using a specific FlyRank warehouse release and analysis period. Therefore, the results may not generalize to other time periods, datasets, or platforms.
+</span>
+
+</div>
+
+
+<div class="callout limit">
+
+<span class="tag">
+PROXY LABEL
+</span>
+
+<span>
+The labels used to define declining or priority pages were constructed as a proxy from available performance trends rather than manually verified ground-truth labels. Therefore, model performance should be interpreted in relation to the proxy definition.
+</span>
+
+</div>
+
+
+<div class="callout limit">
+
+<span class="tag">
+SMALL SAMPLES
+</span>
+
+<span>
+Some pages with very low activity and very few impressions produced unreliable signals. At Precision@20, three of the Random Forest predictions were incorrect, illustrating that the model can still be affected by low-sample-size noise.
+</span>
+
+</div>
+
+
+<div class="callout limit">
+
+<span class="tag">
+FILTERING
+</span>
+
+<span>
+To reduce this issue in the final recommendations, pages with fewer than 10 impressions were excluded from the ranked recommendation list and treated as monitoring candidates rather than immediate review targets.
+</span>
+
+</div>
+
+
+<div class="callout limit">
+
+<span class="tag">
+FEATURE COVERAGE
+</span>
+
+<span>
+Some additional fields were available in the warehouse, including engagement-related and AI-referral signals, but they were not deeply explored because their coverage was limited or sparse at the scale of this analysis.
+</span>
+
+</div>
+
+
+<div class="callout limit">
+
+<span class="tag">
+PRIVACY
+</span>
+
+<span>
+Real client and page identities are hashed and unrecoverable, so external validation of individual page recommendations was not possible.
+</span>
+
+</div>
+
+
+<div class="callout limit">
+
+<span class="tag">
+CAUSALITY
+</span>
+
+<span>
+This work identifies <strong>association, not causation</strong>. The models do not establish why a page is underperforming and do not predict or explain Google's ranking algorithm.
+</span>
+
+</div>
+
+
+<blockquote>
+The results should be treated as decision-support signals for editorial review, rather than as a guaranteed or final verdict on any individual page.
+</blockquote>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     RECOMMENDATIONS
+====================================================== -->
+
+<section id="recs">
+
+<div class="wrap">
+
+<div class="eyebrow">
+06 · Ranked Recommendations
+</div>
+
+<h2>
+An action playbook, not just a leaderboard
+</h2>
+
+<p>
+Using the Random Forest model's predicted probability scores, we removed pages with very low impression counts to reduce small-sample noise. The remaining pages were ranked according to their model scores to identify strong candidates for review.
+</p>
+
+
+<div class="recommendation-box">
+
+<div class="label">
+Decision Rule
+</div>
+
+<p>
+Pages with meaningful impression volume and strong model scores are prioritized for review, while extremely low-impression pages are monitored until more evidence becomes available.
+</p>
+
+</div>
+
+
+<div class="priority-head p1">
+
+<span class="priority-dot"></span>
+
+<h3>
+Priority 1 — Immediate Review (Top 5 Shown)
+</h3>
+
+</div>
+
+
+<div class="tbl-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Rank</th>
+<th>Content ID</th>
+<th class="num">Model Score</th>
+<th class="num">Impressions</th>
+<th class="num">Clicks</th>
+<th class="num">Avg Position</th>
+<th class="num">CTR</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+<td>content_0aaa197051f58d6f</td>
+<td class="num">0.697</td>
+<td class="num">37,613</td>
+<td class="num">22</td>
+<td class="num">36.3</td>
+<td class="num">0.058%</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+<td>content_bfd481a760fa3064</td>
+<td class="num">0.695</td>
+<td class="num">10,404</td>
+<td class="num">9</td>
+<td class="num">42.4</td>
+<td class="num">0.087%</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+<td>content_0c4bfb897ad619da</td>
+<td class="num">0.694</td>
+<td class="num">12,902</td>
+<td class="num">7</td>
+<td class="num">36.1</td>
+<td class="num">0.054%</td>
+
+</tr>
+
+<tr>
+
+<td>4</td>
+<td>content_91487e6f59e8e82f</td>
+<td class="num">0.679</td>
+<td class="num">13,542</td>
+<td class="num">11</td>
+<td class="num">37.8</td>
+<td class="num">0.081%</td>
+
+</tr>
+
+<tr>
+
+<td>5</td>
+<td>content_7a0a59b4cb181ab9</td>
+<td class="num">0.678</td>
+<td class="num">37,775</td>
+<td class="num">22</td>
+<td class="num">34.0</td>
+<td class="num">0.058%</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<p>
+These pages show a consistent pattern: they receive substantial search impressions but have weak average search positions and very low CTRs. Their average positions are all well outside the top 10 results, indicating that their search visibility is not translating effectively into clicks.
+</p>
+
+<p>
+Because these pages have meaningful impression volumes, their signals are more reliable than those of pages with extremely small amounts of data. They should therefore be considered strong candidates for content review. Potential follow-up actions may include reviewing content relevance, updating outdated information, improving search-intent alignment, or evaluating titles and metadata.
+</p>
+
+
+<div class="priority-head p2">
+
+<span class="priority-dot"></span>
+
+<h3>
+Priority 2 — Review Soon (Ranks 11–20)
+</h3>
+
+</div>
+
+<p>
+The remaining pages in the top 20 have model scores of approximately <strong>0.61–0.64</strong>. They show a similar pattern of meaningful impression volume combined with relatively weak search positions and low CTR.
+</p>
+
+<p>
+These pages should be reviewed after the Priority 1 candidates, as they may also represent opportunities for improving organic search performance.
+</p>
+
+
+<div class="priority-head p3">
+
+<span class="priority-dot"></span>
+
+<h3>
+Priority 3 — Monitor
+</h3>
+
+</div>
+
+<p>
+Pages with fewer than 10 impressions were excluded from the immediate ranked recommendations because their model scores may be unreliable due to small-sample noise.
+</p>
+
+<p>
+Rather than making immediate content changes, these pages should be monitored as more impressions and clicks accumulate. Once sufficient data becomes available, they can be evaluated again using the scoring and modeling approach.
+</p>
+
+
+<p style="
+margin-top:28px;
+font-family:'IBM Plex Mono',monospace;
+font-size:11px;
+color:var(--muted);
+">
+
+<strong>NOTE:</strong>
+All content and client identifiers are anonymized hashes generated by FlyRank. No real page URLs, client names, or private information are disclosed.
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     REPRODUCIBILITY
+====================================================== -->
+
+<section id="repro">
+
+<div class="wrap">
+
+<div class="eyebrow">
+07 · Reproducibility
+</div>
+
+<h2>
+Reproducing the analysis
+</h2>
+
+<p class="lede">
+The analysis was designed so that the dataset, workflow, features, baseline scoring method, model evaluation, and recommendation generation can be traced back to the project repository and documented processing workflow.
+</p>
+
+
+<dl class="kv-grid">
+
+<dt>Dataset</dt>
+
+<dd>
+FlyRank ML Internship Warehouse, specifically the
+<code>fact_content_daily_performance</code> table, accessed through the FlyRank internship dataset hosted on Hugging Face.
+</dd>
+
+
+<dt>Dataset Source</dt>
+
+<dd>
+<a href="https://huggingface.co/datasets/FlyRank/internship-warehouse">
+FlyRank Internship Warehouse — Hugging Face
+</a>
+</dd>
+
+
+<dt>Repository</dt>
+
+<dd>
+<a href="https://github.com/Laiba-Tahir29/Machine_learning_internship">
+Machine_learning_internship — GitHub
+</a>
+
+— the assignment notebooks and final capstone notebook are available in
+<code>work/notebooks/</code>.
+</dd>
+
+
+<dt>Workflow</dt>
+
+<dd>
+The internship initially required five assignments. The remaining assignments were completed later as additional time became available. After completing the assignment work, the final <strong>capstone project</strong> was developed using the same dataset and repository.
+</dd>
+
+
+<dt>Software</dt>
+
+<dd>
+Python, DuckDB, pandas, NumPy, and scikit-learn. DuckDB was used for querying and aggregating the warehouse data, while scikit-learn was used to train and evaluate the Decision Tree and Random Forest models.
+</dd>
+
+
+<dt>Features</dt>
+
+<dd>
+<code>active_days</code>,
+<code>total_impressions</code>,
+<code>total_clicks</code>,
+<code>avg_position</code>,
+and
+<code>ctr</code>.
+</dd>
+
+
+<dt>Target / Label</dt>
+
+<dd>
+<code>is_declining</code> — a binary target derived from <code>trend_direction</code> by comparing an earlier and later period within the development data.
+</dd>
+
+
+<dt>Baseline</dt>
+
+<dd>
+
+Expected Clicks = Total Impressions × Expected CTR<br>
+
+Opportunity Gap = Expected Clicks − Total Clicks<br>
+
+Priority Score = Opportunity Gap × 100
+
+</dd>
+
+
+<dt>Split Design</dt>
+
+<dd>
+A client-grouped train/test split was used so that pages belonging to the same client remained entirely within either the training/development data or the test data. This helped prevent client-specific data leakage.
+</dd>
+
+
+<dt>Metric</dt>
+
+<dd>
+Precision@K, with K = 20 and K = 50, was used to measure how effectively the models identified high-priority pages within a limited review capacity.
+</dd>
+
+
+<dt>Processing</dt>
+
+<dd>
+The assignment notebooks were completed as part of the internship workflow. The final <code>capstone.ipynb</code> was then run for the end-to-end analysis, including baseline scoring, Decision Tree and Random Forest training, evaluation, model comparison, and generation of the ranked recommendations.
+</dd>
+
+
+<dt>Results</dt>
+
+<dd>
+The results and tables presented in this report were generated from notebook outputs using the dataset and methodology described above. No values in the final results were manually changed after generation.
+</dd>
+
+</dl>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     ACKNOWLEDGMENTS
+====================================================== -->
+
+<section id="acknowledgments">
+
+<div class="wrap">
+
+<div class="eyebrow">
+08 · Acknowledgments
+</div>
+
+<h2>
+Acknowledgments
+</h2>
+
+<p>
+This project was developed using the FlyRank ML Internship dataset.
+</p>
+
+<p>
+Thanks to the FlyRank team, Mirza, and Alen for providing the internship resources, guidance, and support throughout the project.
+</p>
+
+<p style="margin-top:28px;">
+
+<a href="https://flyrank.ai/">
+FlyRank ↗
+</a>
+
+</p>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     FOOTER
+====================================================== -->
+
+<footer>
+
+<div class="wrap">
+
+<p class="mark">
+Refresh / Content Opportunity Scoring · Laiba Tahir
+</p>
+
+<p class="mark" style="margin-top:8px;">
+Applied Search Intelligence · Machine Learning · SEO
+</p>
+
+<p class="mark" style="margin-top:18px;">
+<a href="https://github.com/Laiba-Tahir29/Machine_learning_internship">
+View Repository ↗
+</a>
+</p>
+
+</div>
+
+</footer>
+
+</div>
+
+</body>
+</html>
